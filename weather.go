@@ -39,6 +39,13 @@ func (w Weather) Summary(latitude, longitude float64) (Summary, error) {
 		if day.MaximumTemp > warmest.MaximumTemp {
 			warmest = day
 		}
+
+		if day.MaximumTemp == warmest.MaximumTemp {
+			if day.HumidityPercent > warmest.HumidityPercent {
+				warmest = day
+			}
+		}
+
 	}
 
 	return Summary{WarmestDay: warmest.Date.Format("2006-01-02")}, nil
