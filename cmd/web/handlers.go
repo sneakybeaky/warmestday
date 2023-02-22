@@ -23,10 +23,22 @@ func (app *Application) summary(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if NumDecPlaces(lat) > 6 {
+		app.ErrorLog.Printf("Latitude has too many decimal places : %f", lat)
+		http.Error(w, "Latitude has too many decimal places - no more than 6 allowed", http.StatusBadRequest)
+		return
+	}
+
 	lon, err := strconv.ParseFloat(query.Get("lon"), 64)
 	if err != nil {
 		app.ErrorLog.Printf("Unable to parse longitude : %v", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	if NumDecPlaces(lon) > 6 {
+		app.ErrorLog.Printf("Longitude has too many decimal places : %f", lat)
+		http.Error(w, "Longitude has too many decimal places - no more than 6 allowed", http.StatusBadRequest)
 		return
 	}
 

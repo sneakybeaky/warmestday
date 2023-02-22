@@ -74,6 +74,43 @@ func TestLocationOutsideEuropeReturnsBadRequest(t *testing.T) {
 
 }
 
+func TestLatitudeLongitudeDecimalPlaces(t *testing.T) {
+
+	t.Parallel()
+
+	cases := map[string]struct {
+		latitude, longitude float64
+	}{
+		"latitude too many places": {
+			latitude: 1.1234567,
+		},
+		"longitude too many places": {
+			longitude: 0.9876543,
+		},
+	}
+
+	var sf sumarizerFunc = func(_, _ float64) (weather.Summary, error) {
+		return weather.Summary{WarmestDay: "want"}, nil
+	}
+	app := newTestApplication(withSummarizer(sf))
+	ts := newTestServer(app.Routes())
+
+	defer ts.Close()
+
+	for name, tc := range cases {
+		t.Run(name, func(t *testing.T) {
+
+			got, _, _ := ts.get(t, fmt.Sprintf("/summary?lat=%.8f&lon=%.8f", tc.latitude, tc.longitude))
+
+			if got != http.StatusBadRequest {
+				t.Fatalf("More than 6 decimal places should return a bad request status, but got %d", got)
+			}
+
+		})
+	}
+
+}
+
 type sumarizerFunc func(latitude, longitude float64) (weather.Summary, error)
 
 func (f sumarizerFunc) Summarize(latitude, longitude float64) (weather.Summary, error) {
