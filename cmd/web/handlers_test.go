@@ -54,6 +54,26 @@ func TestSummaryHappyPath(t *testing.T) {
 
 }
 
+func TestLocationOutsideEuropeReturnsBadRequest(t *testing.T) {
+
+	t.Parallel()
+
+	var sf sumarizerFunc = func(_, _ float64) (weather.Summary, error) {
+		return weather.Summary{}, weather.ErrOutsideEurope
+	}
+	app := newTestApplication(withSummarizer(sf))
+	ts := newTestServer(app.Routes())
+
+	defer ts.Close()
+
+	got, _, _ := ts.get(t, fmt.Sprintf("/summary?lat=1&lon=1"))
+
+	if got != http.StatusBadRequest {
+		t.Fatalf("A request for a location outside Europe should return a bad request status, but got %d", got)
+	}
+
+}
+
 type sumarizerFunc func(latitude, longitude float64) (weather.Summary, error)
 
 func (f sumarizerFunc) Summarize(latitude, longitude float64) (weather.Summary, error) {
