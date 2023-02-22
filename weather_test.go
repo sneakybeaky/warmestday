@@ -13,6 +13,10 @@ func (f forecastfunc) Forecast(latitude, longitude float64) (forecast.Forecast, 
 	return f(latitude, longitude)
 }
 
+/* TODO tests
+- no days at all in forecast
+*/
+
 func TestWarmestDayIsFirstWhenOnlyOneDayInForecast(t *testing.T) {
 
 	t.Parallel()
@@ -58,6 +62,45 @@ func TestWarmestDayChosenWhenMoreThanOneDayInForecast(t *testing.T) {
 					Date:        mustTime(t, wantDay),
 					MaximumTemp: 10,
 				}},
+		}, nil
+	}
+
+	w := warmestday.NewWeather(f)
+	got, err := w.Summary(0, 0)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if got.WarmestDay != wantDay {
+		t.Fatalf("Expected %q but got %q", wantDay, got.WarmestDay)
+	}
+}
+
+func TestWarmestDayChosenInFirstSevenOnly(t *testing.T) {
+
+	t.Parallel()
+
+	wantDay := "2020-01-20"
+
+	days := make([]forecast.Day, 8)
+	days[0] = forecast.Day{
+		Date:        mustTime(t, "2020-01-19"),
+		MaximumTemp: 8,
+	}
+	days[6] = forecast.Day{
+		Date:        mustTime(t, wantDay),
+		MaximumTemp: 9,
+	}
+	days[7] = forecast.Day{
+		Date:        mustTime(t, "2020-01-26"),
+		MaximumTemp: 10,
+	}
+
+	var f forecastfunc = func(_, _ float64) (forecast.Forecast, error) {
+		return forecast.Forecast{
+			Timezone: "Europe/London",
+			Days:     days,
 		}, nil
 	}
 

@@ -27,8 +27,15 @@ func (w Weather) Summary(latitude, longitude float64) (Summary, error) {
 	}
 
 	// TODO what if there are no days ?
-	warmest := f.Days[0]
-	for _, day := range f.Days {
+
+	days := f.Days
+	if len(days) > 7 {
+		days = days[:7]
+	}
+
+	warmest := days[0]
+	for _, day := range days {
+
 		if day.MaximumTemp > warmest.MaximumTemp {
 			warmest = day
 		}
