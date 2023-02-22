@@ -41,7 +41,7 @@ func (w Weather) Summary(latitude, longitude float64) (Summary, error) {
 		}
 
 		if day.MaximumTemp == warmest.MaximumTemp {
-			if day.HumidityPercent > warmest.HumidityPercent {
+			if day.HumidityPercent < warmest.HumidityPercent {
 				warmest = day
 			}
 		}

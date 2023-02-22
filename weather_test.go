@@ -127,7 +127,7 @@ func mustTime(t *testing.T, value string) time.Time {
 
 }
 
-func TestDayWithLargestHumidityChosenWhenMoreThanOneDayWithSameTemperature(t *testing.T) {
+func TestDayWithLowestHumidityChosenWhenMoreThanOneDayWithSameTemperature(t *testing.T) {
 
 	t.Parallel()
 
@@ -140,12 +140,12 @@ func TestDayWithLargestHumidityChosenWhenMoreThanOneDayWithSameTemperature(t *te
 			Days: []forecast.Day{{
 				Date:            mustTime(t, "2020-01-19"),
 				MaximumTemp:     10,
-				HumidityPercent: 9,
+				HumidityPercent: 11,
 			},
 				{
 					Date:            mustTime(t, wantDay),
 					MaximumTemp:     10,
-					HumidityPercent: 11,
+					HumidityPercent: 9,
 				}},
 		}, nil
 	}
