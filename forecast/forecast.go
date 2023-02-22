@@ -23,7 +23,7 @@ type Forecast struct {
 	Days     []Day
 }
 
-// Forecaster returns the forecast for a supplied location.
+// Forecaster returns the forecast for a supplied location. The days are in ascending date order with the first being for tomorrow.
 type Forecaster interface {
 	Forecast(latitude, longitude float64) (Forecast, error)
 }

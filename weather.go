@@ -29,6 +29,8 @@ func (w Weather) Summary(latitude, longitude float64) (Summary, error) {
 	// TODO what if there are no days ?
 
 	days := f.Days
+
+	// We only consider the first 7 days in the forecast
 	if len(days) > 7 {
 		days = days[:7]
 	}
