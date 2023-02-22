@@ -9,10 +9,10 @@ type Day struct {
 	Date time.Time
 
 	// MaximumTemp is the maximum temperature for this day in degrees celsius
-	MaximumTemp float32
+	MaximumTemp float64
 
 	// HumidityPercent is the humidity percentage
-	HumidityPercent int8
+	HumidityPercent int
 }
 
 // Forecast holds a locations timezone and forecast for a number of days in the future.

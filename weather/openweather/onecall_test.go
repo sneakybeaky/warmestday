@@ -6,7 +6,11 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
+	"warmestday/weather"
 	"warmestday/weather/openweather"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestCallIsCorrectlyFormed(t *testing.T) {
@@ -90,9 +94,46 @@ func TestResponseConvertedCorrectly(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	wantTimezone := "Europe/London"
-	if got.Timezone != wantTimezone {
-		t.Errorf("Expected a timezone of %q but got %q", wantTimezone, got.Timezone)
+	// TODO load from golden file maybe
+	want := weather.Forecast{
+		Timezone: "Europe/London",
+		Days: []weather.Day{
+			{
+				Date:            mustTime(t, "2023-02-22T12:00:00Z"),
+				MaximumTemp:     8.25,
+				HumidityPercent: 94,
+			},
+			{
+				Date:            mustTime(t, "2023-02-23T12:00:00Z"),
+				MaximumTemp:     7.24,
+				HumidityPercent: 85,
+			},
+			{
+				Date:            mustTime(t, "2023-02-24T12:00:00Z"),
+				MaximumTemp:     7.13,
+				HumidityPercent: 87,
+			},
+			{
+				Date:            mustTime(t, "2023-02-25T12:00:00Z"),
+				MaximumTemp:     6.48,
+				HumidityPercent: 59,
+			},
+		},
 	}
 
+	if diff := cmp.Diff(want, got); diff != "" {
+		t.Errorf("response mismatch (-want +got):\n%s", diff)
+	}
+
+}
+
+func mustTime(t *testing.T, value string) time.Time {
+	t.Helper()
+	parsed, err := time.Parse("2006-01-02T15:04:05Z07", value)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return parsed
 }

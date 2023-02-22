@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 	"warmestday/weather"
 )
 
@@ -62,5 +63,18 @@ func (oc OneCall) Forecast(latitude, longitude float64) (weather.Forecast, error
 		return weather.Forecast{}, err
 	}
 
-	return weather.Forecast{Timezone: forecast.Timezone}, nil
+	days := make([]weather.Day, len(forecast.Daily))
+	for i, day := range forecast.Daily {
+
+		days[i] = weather.Day{
+			Date:            time.Unix(int64(day.Dt), 0),
+			MaximumTemp:     day.Temp.Max,
+			HumidityPercent: day.Humidity,
+		}
+	}
+
+	return weather.Forecast{
+		Timezone: forecast.Timezone,
+		Days:     days,
+	}, nil
 }
