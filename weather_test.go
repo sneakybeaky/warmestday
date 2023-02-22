@@ -1,6 +1,7 @@
 package warmestday_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 	"warmestday"
@@ -152,6 +153,28 @@ func TestFirstOfManyChosenWhenTheyHaveSameTempAndHumidity(t *testing.T) {
 	if got.WarmestDay != wantDay {
 		t.Fatalf("Expected %q but got %q", wantDay, got.WarmestDay)
 	}
+}
+
+func TestErrorReturnedWhenLocationOutsideEurope(t *testing.T) {
+
+	t.Parallel()
+
+	var f forecastfunc = func(_, _ float64) (forecast.Forecast, error) {
+		return forecast.Forecast{
+			Timezone: "America/New_York",
+			Days: []forecast.Day{{
+				Date: mustTime(t, "2020-01-20"),
+			}},
+		}, nil
+	}
+
+	w := warmestday.NewWeather(f)
+	_, err := w.Summary(0, 0)
+
+	if !errors.Is(err, warmestday.ErrOutsideEurope) {
+		t.Fatal("Forecasts outside of Europe should raise an error")
+	}
+
 }
 
 func mustTime(t *testing.T, value string) time.Time {
