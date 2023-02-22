@@ -34,7 +34,7 @@ func TestWarmestDayIsFirstWhenOnlyOneDayInForecast(t *testing.T) {
 	}
 
 	w := weather.NewWeather(f)
-	got, err := w.Summary(0, 0)
+	got, err := w.Summarize(0, 0)
 
 	if err != nil {
 		t.Fatal(err)
@@ -67,7 +67,7 @@ func TestWarmestDayChosenWhenMoreThanOneDayInForecast(t *testing.T) {
 	}
 
 	w := weather.NewWeather(f)
-	got, err := w.Summary(0, 0)
+	got, err := w.Summarize(0, 0)
 
 	if err != nil {
 		t.Fatal(err)
@@ -106,7 +106,7 @@ func TestWarmestDayChosenInFirstSevenOnly(t *testing.T) {
 	}
 
 	w := weather.NewWeather(f)
-	got, err := w.Summary(0, 0)
+	got, err := w.Summarize(0, 0)
 
 	if err != nil {
 		t.Fatal(err)
@@ -144,7 +144,7 @@ func TestFirstOfManyChosenWhenTheyHaveSameTempAndHumidity(t *testing.T) {
 	}
 
 	w := weather.NewWeather(f)
-	got, err := w.Summary(0, 0)
+	got, err := w.Summarize(0, 0)
 
 	if err != nil {
 		t.Fatal(err)
@@ -169,7 +169,7 @@ func TestErrorReturnedWhenLocationOutsideEurope(t *testing.T) {
 	}
 
 	w := weather.NewWeather(f)
-	_, err := w.Summary(0, 0)
+	_, err := w.Summarize(0, 0)
 
 	if !errors.Is(err, weather.ErrOutsideEurope) {
 		t.Fatal("Forecasts outside of Europe should raise an error")
@@ -212,7 +212,7 @@ func TestDayWithLowestHumidityChosenWhenMoreThanOneDayWithSameTemperature(t *tes
 	}
 
 	w := weather.NewWeather(f)
-	got, err := w.Summary(0, 0)
+	got, err := w.Summarize(0, 0)
 
 	if err != nil {
 		t.Fatal(err)

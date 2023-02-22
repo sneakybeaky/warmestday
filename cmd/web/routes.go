@@ -15,6 +15,7 @@ func (app *Application) Routes() http.Handler {
 	})
 
 	router.HandlerFunc(http.MethodGet, "/ping", ping)
+	router.HandlerFunc(http.MethodGet, "/summary", app.summary)
 
 	standard := alice.New(app.logRequest)
 	return standard.Then(router)

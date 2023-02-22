@@ -11,9 +11,9 @@ import (
 )
 
 type Application struct {
-	InfoLog  *log.Logger
-	ErrorLog *log.Logger
-	Weather  weather.Weather
+	InfoLog    *log.Logger
+	ErrorLog   *log.Logger
+	Summarizer weather.Summarizer
 }
 
 func main() {
@@ -32,9 +32,9 @@ func main() {
 	weather := weather.NewWeather(openweather.NewOneCall(*appID))
 
 	app := &Application{
-		InfoLog:  infoLog,
-		ErrorLog: errorLog,
-		Weather:  weather,
+		InfoLog:    infoLog,
+		ErrorLog:   errorLog,
+		Summarizer: weather,
 	}
 
 	srv := &http.Server{

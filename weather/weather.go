@@ -15,6 +15,12 @@ type Summary struct {
 	WarmestDay string
 }
 
+type Summarizer interface {
+	// Summarize returns the warmest day in the next 7 days for the supplied latitude and longitude
+	// If the location is outside of Europe a ErrOutsideEurope error is returned
+	Summarize(latitude, longitude float64) (Summary, error)
+}
+
 type Weather struct {
 	forecaster forecast.Forecaster
 }
@@ -23,9 +29,9 @@ func NewWeather(forecaster forecast.Forecaster) Weather {
 	return Weather{forecaster: forecaster}
 }
 
-// Summary returns the warmest day in the next 7 days for the supplied latitude and longitude
+// Summarize returns the warmest day in the next 7 days for the supplied latitude and longitude
 // If the location is outside of Europe a ErrOutsideEurope error is returned
-func (w Weather) Summary(latitude, longitude float64) (Summary, error) {
+func (w Weather) Summarize(latitude, longitude float64) (Summary, error) {
 
 	f, err := w.forecaster.Forecast(latitude, longitude)
 
