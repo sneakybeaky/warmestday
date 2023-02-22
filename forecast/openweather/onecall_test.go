@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 	"time"
-	"warmestday/weather"
-	"warmestday/weather/openweather"
+	"warmestday/forecast"
+	"warmestday/forecast/openweather"
 
 	"github.com/google/go-cmp/cmp"
 )
@@ -95,9 +95,9 @@ func TestResponseConvertedCorrectly(t *testing.T) {
 	}
 
 	// TODO load from golden file maybe
-	want := weather.Forecast{
+	want := forecast.Forecast{
 		Timezone: "Europe/London",
-		Days: []weather.Day{
+		Days: []forecast.Day{
 			{
 				Date:            mustTime(t, "2023-02-22T12:00:00Z"),
 				MaximumTemp:     8.25,
