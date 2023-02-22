@@ -6,14 +6,14 @@ import (
 	"net/http"
 	"os"
 	"time"
-	"warmestday"
 	"warmestday/forecast/openweather"
+	"warmestday/weather"
 )
 
 type Application struct {
 	InfoLog  *log.Logger
 	ErrorLog *log.Logger
-	Weather  warmestday.Weather
+	Weather  weather.Weather
 }
 
 func main() {
@@ -29,7 +29,7 @@ func main() {
 		errorLog.Fatal("You must supply the appid to use")
 	}
 
-	weather := warmestday.NewWeather(openweather.NewOneCall(*appID))
+	weather := weather.NewWeather(openweather.NewOneCall(*appID))
 
 	app := &Application{
 		InfoLog:  infoLog,

@@ -1,4 +1,4 @@
-package warmestday
+package weather
 
 import (
 	"errors"

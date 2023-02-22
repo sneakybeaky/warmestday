@@ -1,11 +1,11 @@
-package warmestday_test
+package weather_test
 
 import (
 	"errors"
 	"testing"
 	"time"
-	"warmestday"
 	"warmestday/forecast"
+	"warmestday/weather"
 )
 
 type forecastfunc func(latitude, longitude float64) (forecast.Forecast, error)
@@ -33,7 +33,7 @@ func TestWarmestDayIsFirstWhenOnlyOneDayInForecast(t *testing.T) {
 		}, nil
 	}
 
-	w := warmestday.NewWeather(f)
+	w := weather.NewWeather(f)
 	got, err := w.Summary(0, 0)
 
 	if err != nil {
@@ -66,7 +66,7 @@ func TestWarmestDayChosenWhenMoreThanOneDayInForecast(t *testing.T) {
 		}, nil
 	}
 
-	w := warmestday.NewWeather(f)
+	w := weather.NewWeather(f)
 	got, err := w.Summary(0, 0)
 
 	if err != nil {
@@ -105,7 +105,7 @@ func TestWarmestDayChosenInFirstSevenOnly(t *testing.T) {
 		}, nil
 	}
 
-	w := warmestday.NewWeather(f)
+	w := weather.NewWeather(f)
 	got, err := w.Summary(0, 0)
 
 	if err != nil {
@@ -143,7 +143,7 @@ func TestFirstOfManyChosenWhenTheyHaveSameTempAndHumidity(t *testing.T) {
 		}, nil
 	}
 
-	w := warmestday.NewWeather(f)
+	w := weather.NewWeather(f)
 	got, err := w.Summary(0, 0)
 
 	if err != nil {
@@ -168,10 +168,10 @@ func TestErrorReturnedWhenLocationOutsideEurope(t *testing.T) {
 		}, nil
 	}
 
-	w := warmestday.NewWeather(f)
+	w := weather.NewWeather(f)
 	_, err := w.Summary(0, 0)
 
-	if !errors.Is(err, warmestday.ErrOutsideEurope) {
+	if !errors.Is(err, weather.ErrOutsideEurope) {
 		t.Fatal("Forecasts outside of Europe should raise an error")
 	}
 
@@ -211,7 +211,7 @@ func TestDayWithLowestHumidityChosenWhenMoreThanOneDayWithSameTemperature(t *tes
 		}, nil
 	}
 
-	w := warmestday.NewWeather(f)
+	w := weather.NewWeather(f)
 	got, err := w.Summary(0, 0)
 
 	if err != nil {
