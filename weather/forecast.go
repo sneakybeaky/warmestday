@@ -25,5 +25,5 @@ type Forecast struct {
 
 // Forecaster returns the forecast for a supplied location.
 type Forecaster interface {
-	Forecast(latitude, longitude float32) (Forecast, error)
+	Forecast(latitude, longitude float64) (Forecast, error)
 }

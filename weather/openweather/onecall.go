@@ -1,6 +1,7 @@
 package openweather
 
 import (
+	"fmt"
 	"net/http"
 	"warmestday/weather"
 )
@@ -27,7 +28,7 @@ func NewOneCall(appID string, opts ...func(call *OneCall)) OneCall {
 	return oc
 }
 
-func (oc OneCall) Forecast(latitude, longitude float32) (weather.Forecast, error) {
-	_, _ = oc.Client.Get(oc.BaseURL + "/data/2.5/onecall")
+func (oc OneCall) Forecast(latitude, longitude float64) (weather.Forecast, error) {
+	_, _ = oc.Client.Get(fmt.Sprintf("%s/data/2.5/onecall?lat=%f&lon=%f", oc.BaseURL, latitude, longitude))
 	return weather.Forecast{}, nil
 }

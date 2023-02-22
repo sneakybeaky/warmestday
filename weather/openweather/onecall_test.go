@@ -1,6 +1,7 @@
 package openweather_test
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -12,6 +13,8 @@ func TestCallIsCorrectlyFormed(t *testing.T) {
 
 	called := false
 	wantAppID := "123456789"
+	wantLatitude := 1.1
+	wantLongitude := -88.76543
 
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		called = true
@@ -19,6 +22,16 @@ func TestCallIsCorrectlyFormed(t *testing.T) {
 		if req.URL.Path != "/data/2.5/onecall" {
 			t.Errorf("Wanted a path of \"/data/2.5/onecall\" but got $q")
 		}
+
+		values := req.URL.Query()
+		if gotLatitude := values.Get("lat"); gotLatitude != fmt.Sprintf("%f", wantLatitude) {
+			t.Errorf("Wanted a latitude of %f but got %q", wantLatitude, gotLatitude)
+		}
+
+		if gotLongitude := values.Get("lon"); gotLongitude != fmt.Sprintf("%f", wantLongitude) {
+			t.Errorf("Wanted a longitude of %f but got %q", wantLongitude, gotLongitude)
+		}
+
 		// Send response to be tested
 		rw.Write([]byte(`{}`))
 	}))
@@ -30,7 +43,7 @@ func TestCallIsCorrectlyFormed(t *testing.T) {
 		call.BaseURL = server.URL
 	})
 
-	_, err := oc.Forecast(1.0, 2.0)
+	_, err := oc.Forecast(wantLatitude, wantLongitude)
 
 	if err != nil {
 		t.Fatal(err)
