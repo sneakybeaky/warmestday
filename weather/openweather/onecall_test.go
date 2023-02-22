@@ -32,6 +32,10 @@ func TestCallIsCorrectlyFormed(t *testing.T) {
 			t.Errorf("Wanted a longitude of %f but got %q", wantLongitude, gotLongitude)
 		}
 
+		if gotAppID := values.Get("appid"); gotAppID != wantAppID {
+			t.Errorf("Wanted an appid of %q but got %q", wantAppID, gotAppID)
+		}
+
 		// Send response to be tested
 		rw.Write([]byte(`{}`))
 	}))

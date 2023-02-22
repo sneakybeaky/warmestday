@@ -29,6 +29,6 @@ func NewOneCall(appID string, opts ...func(call *OneCall)) OneCall {
 }
 
 func (oc OneCall) Forecast(latitude, longitude float64) (weather.Forecast, error) {
-	_, _ = oc.Client.Get(fmt.Sprintf("%s/data/2.5/onecall?lat=%f&lon=%f", oc.BaseURL, latitude, longitude))
+	_, _ = oc.Client.Get(fmt.Sprintf("%s/data/2.5/onecall?lat=%f&lon=%f&appid=%s", oc.BaseURL, latitude, longitude, oc.AppID))
 	return weather.Forecast{}, nil
 }
