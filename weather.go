@@ -26,5 +26,13 @@ func (w Weather) Summary(latitude, longitude float64) (Summary, error) {
 		return Summary{}, err
 	}
 
-	return Summary{WarmestDay: f.Days[0].Date.Format("2006-01-02")}, nil
+	// TODO what if there are no days ?
+	warmest := f.Days[0]
+	for _, day := range f.Days {
+		if day.MaximumTemp > warmest.MaximumTemp {
+			warmest = day
+		}
+	}
+
+	return Summary{WarmestDay: warmest.Date.Format("2006-01-02")}, nil
 }
